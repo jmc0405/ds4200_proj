@@ -1,0 +1,67 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kathleen's Website</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <a href="/index.html">home</a>
+            <a href="/tab2.html">tab2</a>
+        </div>
+
+        <div class= 'content'>
+            <div>
+                <h1>title of website</h1>
+            </div>
+            <p>
+                write description here
+
+            </p>
+            <img src="/Users/kathleenwang/Documents/DS4200/something?/friends.png" alt= "picture of me with friends while in china">
+
+            <div>
+                <h3>list name</h3>
+                <ul>
+                    <li>
+                        <a visual one </a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://www.github.com/kkwangster">GitHub</a>
+                    </li>
+                    <li>
+                        <a href="mailto:wang.kathl@northeastern.edu">Email</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<style>
+    :root {
+        font-family: Roboto;
+    }
+
+    body {
+        margin: 0px;
+    }
+
+    .container {
+        background-color: lightblue;
+    }
+    .content {
+        background-color: white;
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid black;
+    }
+ 
+</style>
