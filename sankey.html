@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sankey Diagram</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="sankey.html">Sankey Diagram</a>
+        <a href="treemap.html">Treemap Diagram</a>
+        <a href="cloud.html">Cloud Diagram</a>
+        <a href="regression.html">Regression Diagram</a>
+        <a href="conclusions.html">Conclusions</a>
+    </nav>
+
+    <h1>Favorite Genre to Concert Attendance Genre</h1>
+    <div id="sankeyChart" style="width: 100%; height: 700px;"></div>
+
+    <script>
+        function cleanGenre(x) {
+            if (x === null || x === undefined) return null;
+
+            x = String(x).trim().toLowerCase();
+            x = x.replace(/\s+/g, " ");
+
+            const replacements = {
+                "hip hop": "hip-hop",
+                "hiphop": "hip-hop",
+                "rap": "hip-hop",
+                "rap/hip-hop": "hip-hop",
+                "rnb": "r&b",
+                "r&b": "r&b",
+                "alt": "alternative",
+                "alt rock": "alternative",
+                "alternative rock": "alternative",
+                "indie rock": "indie",
+                "electronic": "edm",
+                "edm/house": "edm",
+                "pop music": "pop",
+                "rock music": "rock"
+            };
+
+            let cleaned = replacements[x] || x;
+
+            if (!cleaned || cleaned === "nan") return null;
+
+            return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+        }
+
+        Papa.parse("cleaned_music_data.csv", {
+            download: true,
+            header: true,
+            complete: function(results) {
+                let df = results.data;
+
+                // -------------------------
+                // RENAME / EXTRACT COLUMNS
+                // -------------------------
+                df = df.map(row => ({
+                    fav_genre: row["Top Genre (#1)"] || "",
+                    concert_genre: row["What genres were the concerts you attended in 2025?"] || "",
+                    hours_listening: row["How many hours of music do you listen to per day on average (estimated)?"] || "",
+                    concerts: row["How many concerts did you attend in 2025?"] || "",
+                    avg_spend: row["On average, how much did you spend on a concert ticket in 2025?"] || ""
+                }));
+
+                // -------------------------
+                // CLEAN NUMERIC COLUMNS
+                // -------------------------
+                df = df.map(row => ({
+                    ...row,
+                    concerts: Number(row.concerts),
+                    hours_listening: Number(row.hours_listening),
+                    avg_spend: Number(row.avg_spend)
+                }));
+
+                // Set minimum concerts attended to 1
+                df = df.map(row => ({
+                    ...row,
+                    concerts: (!isNaN(row.concerts) && row.concerts > 0) ? row.concerts : 1
+                }));
+
+                // -------------------------
+                // CLEAN GENRE VALUES
+                // -------------------------
+                let expandedRows = [];
+
+                df.forEach(row => {
+                    const favGenre = cleanGenre(row.fav_genre);
+                    const rawConcertGenre = row.concert_genre;
+
+                    let splitGenres = String(rawConcertGenre).split(/,|\/|;|&|\band\b/i);
+
+                    splitGenres.forEach(g => {
+                        expandedRows.push({
+                            fav_genre: favGenre,
+                            concert_genre: cleanGenre(g),
+                            hours_listening: row.hours_listening,
+                            concerts: row.concerts,
+                            avg_spend: row.avg_spend
+                        });
+                    });
+                });
+
+                // -------------------------
+                // REMOVE BAD / UNWANTED VALUES
+                // -------------------------
+                const badRight = ["nan", "a", "n", ""];
+
+                expandedRows = expandedRows.filter(row => {
+                    if (!row.fav_genre || !row.concert_genre) return false;
+                    if (isNaN(row.hours_listening) || isNaN(row.concerts) || isNaN(row.avg_spend)) return false;
+                    if (row.fav_genre.toLowerCase() === "rock") return false;
+                    if (badRight.includes(row.concert_genre.toLowerCase())) return false;
+                    if (row.concert_genre.length <= 1) return false;
+                    return true;
+                });
+
+                // -------------------------
+                // BUILD SANKEY DIAGRAM
+                // -------------------------
+                const flowMap = {};
+
+                expandedRows.forEach(row => {
+                    const key = row.fav_genre + "||" + row.concert_genre;
+                    flowMap[key] = (flowMap[key] || 0) + 1;
+                });
+
+                const flowCounts = Object.entries(flowMap).map(([key, count]) => {
+                    const [fav_genre, concert_genre] = key.split("||");
+                    return { fav_genre, concert_genre, count };
+                });
+
+                const leftLabels = [...new Set(flowCounts.map(d => d.fav_genre))].sort();
+                const rightLabels = [...new Set(flowCounts.map(d => d.concert_genre))].sort();
+
+                const leftNodes = leftLabels.map(g => `Favorite: ${g}`);
+                const rightNodes = rightLabels.map(g => `Concert: ${g}`);
+                const allNodes = [...leftNodes, ...rightNodes];
+
+                const labelToIndex = {};
+                allNodes.forEach((label, i) => {
+                    labelToIndex[label] = i;
+                });
+
+                const sources = flowCounts.map(d => labelToIndex[`Favorite: ${d.fav_genre}`]);
+                const targets = flowCounts.map(d => labelToIndex[`Concert: ${d.concert_genre}`]);
+                const values = flowCounts.map(d => d.count);
+
+                const displayLabels = [...leftLabels, ...rightLabels];
+
+                const figData = [{
+                    type: "sankey",
+                    arrangement: "snap",
+                    node: {
+                        pad: 20,
+                        thickness: 20,
+                        label: displayLabels
+                    },
+                    link: {
+                        source: sources,
+                        target: targets,
+                        value: values
+                    }
+                }];
+
+                const layout = {
+                    title: { text: "Favorite Genre to Concert Attendance Genre" },
+                    font: { size: 11 }
+                };
+
+                Plotly.newPlot("sankeyChart", figData, layout, { responsive: true });
+            }
+        });
+    </script>
+
+</body>
+</html>
