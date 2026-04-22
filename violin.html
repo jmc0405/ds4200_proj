@@ -20,7 +20,7 @@
         <a href="conclusions.html">Conclusions</a>
     </nav>
 
-    <h1>Listening Hours by School</h1>
+    <h1>Violin Plot</h1>
     <div id="violinChart" style="width: 100%; height: 700px;"></div>
 
     <h2>Analysis</h2>
@@ -31,7 +31,7 @@
         concentration of responses. Some schools show a tighter cluster of listening hours, while others
         have a wider distribution, suggesting more variation in music engagement. Overall, the visualization
         helps show how listening behavior differs across academic groups while still revealing that most
-        students fall within a similar general range of daily listening time.
+        students fall within a similar general range of daily listening time. The violin plot illustrates the distribution of daily music listening hours across different schools, highlighting both the central tendencies and variability within each group. Overall, most students across all schools tend to cluster around moderate listening levels, typically between 2 to 5 hours per day. However, there is noticeable variation in spread, with some schools such as Khoury College of Computer Sciences and the D’Amore-McKim School of Business showing wider distributions and higher upper-range values, indicating the presence of heavier listeners. In contrast, schools like the College of Social Sciences and Humanities display a more concentrated range, suggesting more consistent listening habits among students. These patterns suggest that while general music engagement is relatively similar across schools, certain groups exhibit greater diversity in listening behavior, reflecting differences in lifestyle or student preferences.
     </p>
 
     <script>
@@ -94,7 +94,8 @@
                 const layout = {
                     title: { text: "Distribution of Listening Hours by School" },
                     yaxis: { title: "Hours Listening per Day" },
-                    xaxis: { title: "School" },
+                    xaxis: {showticklabels: false,
+                    title: ""},
                     violinmode: "group",
                     font: { size: 11 }
                 };
