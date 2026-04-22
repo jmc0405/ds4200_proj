@@ -1,0 +1,38 @@
+DS4200 Project Description:
+In the current digital age, college students’ music consumption is composed of various conscious and unconscious behavioral data that is a reflection of their preferences, engagement, and habits. This project aims to explore how a student’s music/listening statistics (i.e., average number of hours of music listened to in a day, top artists streamed) relate to the likelihood of purchasing concert tickets and how much they are willing to pay for a concert ticket. By analyzing these patterns, the project aims to uncover connections between listening statistics and consumer spending, which can be valuable for companies within the entertainment and music industry in providing insights related to pricing/revenue strategy, marketing campaigns, and demand forecasting. Therefore, the overarching objective of this project is to bridge the gap between behavioral insights/consumer preferences and business decisions/applications within the entertainment/music space.
+To obtain a representative sample, we surveyed over 100 Northeastern students. We created a survey designed to collect meaningful data on students’ music listening experiences, favorite genres, artists, and concert-related spending habits. The data was collected by sharing the survey across a variety of student organizations that each team member is involved in, allowing us to capture responses from students with different interests, backgrounds, and academic disciplines. The survey was anonymous and included both categorical (qualitative) and numerical (quantitative) data.
+Project website link: https://jmc0405.github.io/ds4200_proj/index.html
+Design ideas:
+
+1. Sankey Diagram
+The Sankey diagram illustrates the flow between students’ favorite genres and the genres of concerts they actually attended. This allows us to compare stated preference with real-world behavior. Strong same-genre flows suggest that students often attend concerts that align with their favorite music styles, while cross-genre flows show that many students are also willing to explore live music outside of their main preference. This visualization is especially helpful for understanding the gap between passive music taste and active consumption.
+
+
+2. Treemap
+The treemap visualization shows the overall distribution of music genres across students and highlights the relationship between students’ top genre choices and their school or academic background. By comparing the relative sizes of each genre category, the treemap helps reveal which genres are most dominant in the dataset while also showing how music taste may vary across student groups. This makes it useful for identifying both widely shared preferences and more distinct patterns tied to academic communities.
+
+3. Cloud Diagrams
+The word cloud visualizations summarize the artists most frequently mentioned by students. Artists who appear larger were named more often in the survey, making it easy to identify the most popular artists at a glance. This visualization provides a quick overview of the listening landscape of the sample and highlights both highly dominant artists and the diversity of music tastes across the student population.
+
+4. Regression Plot
+The regression visualization examines the relationship between music engagement and concert spending by comparing hours of music listened to per day with the average amount spent on concert tickets. This plot helps us explore whether students who are more engaged with music are also more willing to spend money on live events. The trend line provides a simple way to evaluate whether there is a positive relationship between listening behavior and spending.
+
+5. Violin Plot
+We were curious to see how the different distribution of listening times was for each of the different colleges at Northeastern. We utilized a violin plot to explore the overall distribution spreads in hours listened to music by different students in the different colleges at Northeastern.
+
+Feedback from the peer review:
+What people loved:
+Sankey diagram — Reviewers consistently called it creative, well-chosen, and insightful for showing the gap between stated genre preference and actual concert attendance.
+Website structure — the tabbed layout was widely appreciated for feeling organized and professional.
+Primary data collection — surveying 100+ real Northeastern students was noted as impressive and gave the project a relatable feel.
+Treemap — praised for showing genre distribution by college in a unique and effective way.
+Word clouds — visually engaging and creative, though see below.
+
+Recurring criticisms:
+Broken cloud diagram & conclusions page — this was the #1 complaint across many responses. Multiple reviewers couldn't access these pages, which hurt scores significantly.
+Visualization descriptions placement — several people wanted explanations placed on each viz page rather than only on the homepage, so they don't have to navigate back and forth.
+Multi-page navigation — some felt the separate pages broke the narrative flow compared to a single scrollable layout.
+We did quality assurance and repaired the broken cloud diagram as well as the conclusion pages. We also moved the visualization views to their respective page so users do not have to go back and forth between tabs to see what the visualization is telling. We did get criticism about having multipage navigation, but we decided not to change it, as we believe it's easier to separate and organize the different visualizations than having them all on one page.
+
+
+
