@@ -49,17 +49,13 @@
                     hours_listening: row["How many hours of music do you listen to per day on average (estimated)?"] || ""
                 }));
 
-                // -------------------------
-                // CLEAN NUMERIC COLUMNS
-                // -------------------------
+
                 df = df.map(row => ({
                     ...row,
                     hours_listening: Number(row.hours_listening)
                 }));
 
-                // -------------------------
-                // REMOVE BAD / UNWANTED VALUES
-                // -------------------------
+
                 df = df.filter(row => {
                     if (!row.school || row.school.trim() === "") return false;
                     if (isNaN(row.hours_listening)) return false;
@@ -67,9 +63,7 @@
                     return true;
                 });
 
-                // -------------------------
-                // BUILD VIOLIN PLOT
-                // -------------------------
+
                 const schools = [...new Set(df.map(row => row.school))].sort();
 
                 const figData = schools.map(school => {
