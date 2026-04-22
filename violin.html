@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Violin Plot</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="sankey.html">Sankey Diagram</a>
+        <a href="treemap.html">Treemap Diagram</a>
+        <a href="cloud.html">Cloud Diagram</a>
+        <a href="regression.html">Regression Diagram</a>
+        <a href="violin.html">Violin Plot</a>
+        <a href="conclusions.html">Conclusions</a>
+    </nav>
+
+  <h1>Distribution of Daily Music Listening Hours by School</h1>
+    <div id="violinChart" style="width: 100%; height: 750px;"></div>
+
+    <h2>Analysis</h2>
+    <p>
+        This violin plot compares the distribution of daily music listening hours across schools.
+        It shows not only which schools tend to have higher or lower listening time on average,
+        but also how spread out the responses are within each group. The embedded box plots
+        highlight the median and quartiles, while the individual points show the exact student responses.
+    </p>
+
+    <script>
+        Papa.parse("cleaned_music_data.csv", {
+            download: true,
+            header: true,
+            complete: function(results) {
+                let df = results.data.map(row => ({
+                    school: row["School"] ? row["School"].trim() : "",
+                    hours_listening: Number(row["How many hours of music do you listen to per day on average (estimated)?"])
+                }));
+
+                // Keep realistic values only
+                df = df.filter(row =>
+                    row.school !== "" &&
+                    !isNaN(row.hours_listening) &&
+                    row.hours_listening >= 0 &&
+                    row.hours_listening <= 24
+                );
+
+                const schools = [...new Set(df.map(row => row.school))];
+
+                const traces = schools.map(school => {
+                    const schoolData = df
+                        .filter(row => row.school === school)
+                        .map(row => row.hours_listening);
+
+                    return {
+                        type: "violin",
+                        name: school,
+                        y: schoolData,
+                        box: { visible: true },
+                        points: "all",
+                        meanline: { visible: true }
+                    };
+                });
+
+                const layout = {
+                    title: { text: "Distribution of Daily Music Listening Hours by School" },
+                    yaxis: { title: "Hours Listening per Day" },
+                    xaxis: { title: "School" },
+                    violinmode: "group"
+                };
+
+                Plotly.newPlot("violinChart", traces, layout, { responsive: true });
+            }
+        });
+    </script>
+
+</body>
+</html>
