@@ -1,9 +1,7 @@
 import pandas as pd
 import plotly.express as px
 
-# -------------------------
-# LOAD + CLEAN
-# -------------------------
+# load and clean
 df = pd.read_csv("cleaned_music_data.csv")
 df.columns = df.columns.str.strip()
 
@@ -14,18 +12,16 @@ df = df.rename(columns={
 
 df["hours_listening"] = pd.to_numeric(df["hours_listening"], errors="coerce")
 
-# Keep realistic listening hours only
+# keep realistic listening hours only
 df = df[(df["hours_listening"] >= 0) & (df["hours_listening"] <= 24)]
 
-# Drop missing schools / listening hours
+# drop missing schools / listening hours
 df = df.dropna(subset=["school", "hours_listening"])
 
-# Remove blank school labels
+# remove blank school labels
 df = df[df["school"].astype(str).str.strip() != ""]
 
-# -------------------------
-# VIOLIN PLOT
-# -------------------------
+# violin plot
 fig = px.violin(
     df,
     x="school",
